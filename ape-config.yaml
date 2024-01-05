@@ -1,0 +1,14 @@
+name: Terms Of Service
+
+dependencies:
+  - name: OpenZeppelin
+    github: OpenZeppelin/openzeppelin-contracts
+    version: 4.9.5
+
+solidity:
+  import_remapping:
+    - "@openzeppelin=OpenZeppelin/4.9.5"
+
+plugins:
+  - name: solidity
+    version: 0.7.0

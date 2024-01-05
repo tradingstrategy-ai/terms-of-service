@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "terms-of-service"
+version = "0.1.0"
+description = "Solidity Terms of Service acceptance manager"
+authors = ["Mikko Ohtamaa <mikko@opensourcehacker.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "terms_of_service"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+eth-ape = "^0.7.3"
+
+
+[tool.poetry.group.dev.dependencies]
+ipdb = "^0.13.13"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
