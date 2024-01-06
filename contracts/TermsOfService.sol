@@ -44,11 +44,15 @@ contract TermsOfService is Ownable {
     constructor() Ownable() {
     }
 
-    function hasAcceptedHash(address account, bytes32 textHash) public returns (bool accepted) {
+    function hasAcceptedHash(address account, bytes32 textHash) public view returns (bool accepted) {
         return acceptances[account][textHash];
     }
 
-    function hasAcceptedVersion(address account, uint16 version) public returns (bool accepted) {
+    function getTextHash(uint16 version) public view returns (bytes32 hash) {
+        return versions[version];
+    }
+
+    function hasAcceptedVersion(address account, uint16 version) public view returns (bool accepted) {
         bytes32 hash = versions[version];
         require(hash != bytes32(0), "No such version");
         return hasAcceptedHash(account, hash);
@@ -59,6 +63,7 @@ contract TermsOfService is Ownable {
         require(textHash != latestTermsOfServiceHash, "Setting the same terms of service twice");
         latestTermsOfServiceHash = textHash;
         latestTermsOfServiceVersion = version;
+        versions[version] = textHash;
         emit UpdateTermsOfService(version, textHash);
     }
 
@@ -66,7 +71,7 @@ contract TermsOfService is Ownable {
      * Can the current user proceed to the next step, or they they need to sign
      * the latest terms of service.
      */
-    function canProceed() public returns (bool accepted) {
+    function canProceed() public view returns (bool accepted) {
         require(latestTermsOfServiceHash != bytes32(0), "Terms of service not initialised");
         return hasAcceptedHash(msg.sender, latestTermsOfServiceHash);
     }

@@ -39,8 +39,10 @@ def test_first_terms_of_service(tos: ContractInstance, deployer: TestAccount):
     # https://academy.apeworx.io/articles/testing
     logs = list(tx.decode_logs(tos.UpdateTermsOfService))
     assert len(logs) == 1
-    assert logs[0].version == 1
+    assert logs[0].version == new_version
     assert logs[0].textHash == new_hash
+
+    assert tos.getTextHash(new_version) == new_hash
 
 
 def test_second_terms_of_service(tos: ContractInstance, deployer: TestAccount):
@@ -57,7 +59,7 @@ def test_second_terms_of_service(tos: ContractInstance, deployer: TestAccount):
     assert tos.latestTermsOfServiceHash() == new_hash
 
 
-def test_wrong_setter(tos: ContractInstance, random_user: TestAccount):
+def test_wrong_owner(tos: ContractInstance, random_user: TestAccount):
     new_version = 1
     new_hash = random.randbytes(32)
 
@@ -65,4 +67,36 @@ def test_wrong_setter(tos: ContractInstance, random_user: TestAccount):
         tos.updateTermsOfService(new_version, new_hash, sender=random_user)
 
     assert tos.latestTermsOfServiceVersion() == 0
+
+
+def test_wrong_version(tos: ContractInstance, deployer: TestAccount):
+    new_version = 2
+    new_hash = random.randbytes(32)
+
+    with pytest.raises(ContractLogicError):
+        tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+
+    assert tos.latestTermsOfServiceVersion() == 0
+
+
+def test_hash_reuse(tos: ContractInstance, deployer: TestAccount):
+    new_version = 1
+    new_hash = random.randbytes(32)
+    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+
+    new_version = 2
+    with pytest.raises(ContractLogicError):
+        tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+
+
+def test_transfer_ownership(tos: ContractInstance, deployer: TestAccount, random_user: TestAccount):
+    tos.transferOwnership(random_user, sender=deployer)
+    assert tos.owner() == random_user
+
+
+def test_transfer_ownership_only_owner(tos: ContractInstance, deployer: TestAccount, random_user: TestAccount):
+    with pytest.raises(ContractLogicError):
+        tos.transferOwnership(random_user, sender=random_user)
+
+
 
