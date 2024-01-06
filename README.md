@@ -28,3 +28,7 @@ ape compile
 ```
 
 ## Running tests
+
+## Notes
+
+- [Ape example repository]().

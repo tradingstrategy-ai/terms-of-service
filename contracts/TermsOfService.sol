@@ -56,6 +56,7 @@ contract TermsOfService is Ownable {
 
     function updateTermsOfService(uint16 version, bytes32 textHash) public onlyOwner {
         require(version == latestTermsOfServiceVersion + 1, "Versions must be updated incrementally");
+        require(textHash != latestTermsOfServiceHash, "Setting the same terms of service twice");
         latestTermsOfServiceHash = textHash;
         latestTermsOfServiceVersion = version;
         emit UpdateTermsOfService(version, textHash);
@@ -66,6 +67,7 @@ contract TermsOfService is Ownable {
      * the latest terms of service.
      */
     function canProceed() public returns (bool accepted) {
+        require(latestTermsOfServiceHash != bytes32(0), "Terms of service not initialised");
         return hasAcceptedHash(msg.sender, latestTermsOfServiceHash);
     }
 
