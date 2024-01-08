@@ -29,6 +29,11 @@ ape compile
 
 ## Running tests
 
+```shell
+poetry shell
+ape test
+```
+
 ## Notes
 
 - [Ape example repository]().

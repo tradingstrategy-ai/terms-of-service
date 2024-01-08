@@ -96,7 +96,7 @@ contract TermsOfService is Ownable {
      * - OpenZeppelin SignatureChecker implementation: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/SignatureChecker.sol
      */
     function signTermsOfServiceBehalf(address signer, bytes32 hash, bytes memory signature, bytes memory metadata) public {
-        require(hash == latestAcceptanceMessageHash, "Cannot sign older versions terms of services");
+        require(hash == latestAcceptanceMessageHash, "Cannot sign older or unknown versions terms of services");
         require(signer.isValidSignatureNow(hash, signature), "Signature is not valid");
         require(acceptances[signer][latestAcceptanceMessageHash] == false, "Already signed");
         acceptances[signer][latestAcceptanceMessageHash] = true;

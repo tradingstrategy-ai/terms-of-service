@@ -1,0 +1,42 @@
+name: Automated test suite
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  test-python:
+
+    runs-on: ubuntu-latest
+
+    # Only run the action for the latest push
+    # See https://docs.github.com/en/actions/using-jobs/using-concurrency#example-only-cancel-in-progress-jobs-or-runs-for-the-current-workflow
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      # TODO: we only need contracts/aave-v3-deploy for tests
+      # but there does not seem to be an option to choose which submodules to checkout
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Install poetry
+        run: pipx install poetry
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.12'
+          cache: 'poetry'
+      - name: Install dependencies
+        run: |
+          poetry env use '3.12'
+          poetry install --all-extras
+      - name: Run test scripts
+        run: |
+          poetry run pytest 
+ 

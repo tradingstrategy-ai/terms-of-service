@@ -1,12 +1,11 @@
-"""Tests covering Terms of Service module."""
+"""Tests covering signing terms of service."""
 import datetime
 import random
 
 import pytest
+from ape import reverts
 from ape.contracts import ContractInstance
-from ape.exceptions import ContractLogicError
 from ape_test import TestAccount
-from hexbytes import HexBytes
 
 from terms_of_service.acceptance_message import generate_acceptance_message, get_signing_hash
 
@@ -76,6 +75,7 @@ def test_signed(
     assert logs[0].metadata == b"XX"
 
     assert tos.canProceed(sender=random_user)
+    assert tos.hasAcceptedVersion(random_user, 1)
 
 
 def test_sign_twice(
@@ -84,6 +84,67 @@ def test_sign_twice(
     random_user: TestAccount,
 ):
     new_version = 1
-    new_hash = random.randbytes(32)
-    tx = tos.updateTermsOfService(new_version, new_hash, sender=deployer)
 
+    # Generate the message user needs to sign in their wallet
+    signing_content = generate_acceptance_message(
+        1,
+        datetime.datetime.utcnow(),
+        "http://example.com/terms-of-service",
+        random.randbytes(32),
+    )
+    new_hash = get_signing_hash(signing_content)
+
+    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+
+    signature = random_user.sign_message(signing_content).encode_rsv()
+
+    tos.signTermsOfServiceOwn(new_hash, signature, b"", sender=random_user)
+
+    with reverts("Already signed"):
+        tos.signTermsOfServiceOwn(new_hash, signature, b"", sender=random_user)
+
+
+def test_sign_no_version(
+    tos: ContractInstance,
+    deployer: TestAccount,
+    random_user: TestAccount,
+):
+    new_version = 1
+
+    # Generate the message user needs to sign in their wallet
+    signing_content = generate_acceptance_message(
+        1,
+        datetime.datetime.utcnow(),
+        "http://example.com/terms-of-service",
+        random.randbytes(32),
+    )
+    new_hash = get_signing_hash(signing_content)
+
+    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+
+    signature = random_user.sign_message(signing_content).encode_rsv()
+
+    with reverts("Cannot sign older or unknown versions terms of services"):
+        tos.signTermsOfServiceOwn(random.randbytes(32), signature, b"", sender=random_user)
+
+
+def test_sign_wrong_signature(
+    tos: ContractInstance,
+    deployer: TestAccount,
+    random_user: TestAccount,
+):
+    new_version = 1
+
+    # Generate the message user needs to sign in their wallet
+    signing_content = generate_acceptance_message(
+        1,
+        datetime.datetime.utcnow(),
+        "http://example.com/terms-of-service",
+        random.randbytes(32),
+    )
+    new_hash = get_signing_hash(signing_content)
+
+    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+
+    with reverts("Signature is not valid"):
+        tos.signTermsOfServiceOwn(new_hash, random.randbytes(32), b"", sender=random_user)
