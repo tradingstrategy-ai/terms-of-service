@@ -36,10 +36,10 @@ jobs:
       - name: Install Ape plugins
         run: |
           poetry run ape plugins install .
-      - name: Compile smart contract packages
+      - name: Compile smart contract dependency packages
         run: |
           poetry run ape pm compile
-      - name: Compile smart contracts
+      - name: Compile our smart contracts
         run: |
           poetry run ape compile
       - name: Run test scripts
