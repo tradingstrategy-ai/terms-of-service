@@ -23,14 +23,14 @@ contract TermsOfService is Ownable {
     // Each terms of service is identified by its hash of text.
     // The acceptance is a message that signs this terms of service version.
     //
-    mapping(address account => mapping(bytes32 textHash => bool accepted)) public acceptances;
+    mapping(address account => mapping(bytes32 acceptanceMessageHash => bool accepted)) public acceptances;
 
     //
     // Published terms of services
     //
-    mapping(uint16 version => bytes32 textHash) public versions;
+    mapping(uint16 version => bytes32 acceptanceMessageHash) public versions;
 
-    bytes32 public latestTermsOfServiceHash;
+    bytes32 public latestAcceptanceMessageHash;
 
     //
     // Terms of service versions, starting from 1 and
@@ -39,13 +39,15 @@ contract TermsOfService is Ownable {
     uint16 public latestTermsOfServiceVersion;
 
     // Add a new terms of service version
-    event UpdateTermsOfService(uint16 version, bytes32 textHash);
+    event UpdateTermsOfService(uint16 version, bytes32 acceptanceMessageHash);
+
+    event Signed(address signer, uint16 version, bytes32 hash, bytes metadata);
 
     constructor() Ownable() {
     }
 
-    function hasAcceptedHash(address account, bytes32 textHash) public view returns (bool accepted) {
-        return acceptances[account][textHash];
+    function hasAcceptedHash(address account, bytes32 acceptanceMessageHash) public view returns (bool accepted) {
+        return acceptances[account][acceptanceMessageHash];
     }
 
     function getTextHash(uint16 version) public view returns (bytes32 hash) {
@@ -58,13 +60,13 @@ contract TermsOfService is Ownable {
         return hasAcceptedHash(account, hash);
     }
 
-    function updateTermsOfService(uint16 version, bytes32 textHash) public onlyOwner {
+    function updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash) public onlyOwner {
         require(version == latestTermsOfServiceVersion + 1, "Versions must be updated incrementally");
-        require(textHash != latestTermsOfServiceHash, "Setting the same terms of service twice");
-        latestTermsOfServiceHash = textHash;
+        require(acceptanceMessageHash != latestAcceptanceMessageHash, "Setting the same terms of service twice");
+        latestAcceptanceMessageHash = acceptanceMessageHash;
         latestTermsOfServiceVersion = version;
-        versions[version] = textHash;
-        emit UpdateTermsOfService(version, textHash);
+        versions[version] = acceptanceMessageHash;
+        emit UpdateTermsOfService(version, acceptanceMessageHash);
     }
 
     /**
@@ -72,8 +74,8 @@ contract TermsOfService is Ownable {
      * the latest terms of service.
      */
     function canProceed() public view returns (bool accepted) {
-        require(latestTermsOfServiceHash != bytes32(0), "Terms of service not initialised");
-        return hasAcceptedHash(msg.sender, latestTermsOfServiceHash);
+        require(latestAcceptanceMessageHash != bytes32(0), "Terms of service not initialised");
+        return hasAcceptedHash(msg.sender, latestAcceptanceMessageHash);
     }
 
     /**
@@ -81,20 +83,28 @@ contract TermsOfService is Ownable {
      *
      * - Externally Owned Account sign
      * - EIP-1271 sign
+     * - EIP-191 formatted message
      *
      * The user can sign multiple times.
      *
      * See
      *
+     * - ECDSA tryRecover https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/ECDSA.sol
+     *
      * - Gnosis Safe signing example: https://github.com/safe-global/safe-eth-py/blob/master/gnosis/safe/tests/test_safe_signature.py#L195
      *
      * - OpenZeppelin SignatureChecker implementation: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/SignatureChecker.sol
      */
-    function signTermsOfService(address signer, bytes32 hash, bytes memory signature) public {
-        address signer = msg.sender;
-        require(hash == latestTermsOfServiceHash, "Cannot sign older versions terms of services");
+    function signTermsOfServiceBehalf(address signer, bytes32 hash, bytes memory signature, bytes memory metadata) public {
+        require(hash == latestAcceptanceMessageHash, "Cannot sign older versions terms of services");
         require(signer.isValidSignatureNow(hash, signature), "Signature is not valid");
-        require(acceptances[signer][latestTermsOfServiceHash] == false, "Already signed");
-        acceptances[signer][latestTermsOfServiceHash] = true;
+        require(acceptances[signer][latestAcceptanceMessageHash] == false, "Already signed");
+        acceptances[signer][latestAcceptanceMessageHash] = true;
+        emit Signed(signer, latestTermsOfServiceVersion, latestAcceptanceMessageHash, metadata);
     }
+
+    function signTermsOfServiceOwn(bytes32 hash, bytes memory signature, bytes memory metadata) public {
+        signTermsOfServiceBehalf(msg.sender, hash, signature, metadata);
+    }
+
 }
