@@ -35,10 +35,10 @@ jobs:
           poetry install --all-extras
       - name: Compile dependencies
         run: |
-          ape pm compile
+          poetry run ape pm compile
       - name: Compile smart contracts
         run: |
-          ape compile
+          poetry run ape compile
       - name: Run test scripts
         run: |
           poetry run pytest 
