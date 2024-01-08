@@ -12,6 +12,43 @@ has accepted the latest terms of service.
 
 - Python 3.10+
 
+## Workflow
+
+### Deploying
+
+Deploy [TermsOfService smart contract](./contracts/TermsOfService.sol) for your chain
+
+- Each deployment has its own smart contract address
+- Each chain needs its own deployment
+- Each TermsOfService tracks the currently active terms of service text
+
+### Updating terms of service
+
+Creating terms of service
+
+- Create a Markdown/plain text terms of service file
+  - Must be dated
+  - Must have a version number counter start from 1, then 2
+  - Record SHA-256 bit hash of the text 
+- Use update script to bump the new terms of service live
+
+### Users to sign the terms of service
+
+- The smart contract has `canProceed` function to check if a 
+  particular address has signed the latest terms of service version
+- The user signs a [template message](./terms_of_service/acceptance_message.py)
+  with their wallet. Note that this message only refers to the actual 
+  terms of service based on its version, hash, date and link,
+- The address must have always signed the latest terms of service,
+  and should be prompted to sign again if this is not the case
+- The terms of service signing payload can be passed part 
+  as another smart contract transaction, and **does not** need
+  to be a separate transaction
+
+On hashes: There are two hashes. One for the actual terms of service
+file (never referred in the smart contracts) and one for the message
+(template-based) that users need to sign with their wallet.
+
 ## Getting started
 
 Install framework with Poetry:
@@ -34,6 +71,3 @@ poetry shell
 ape test
 ```
 
-## Notes
-
-- [Ape example repository]().
