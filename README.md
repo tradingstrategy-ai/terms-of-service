@@ -71,3 +71,10 @@ poetry shell
 ape test
 ```
 
+## More information
+
+- [Join Discord for any questions](https://tradingstrategy.ai/community).
+- [Watch tutorials on YouTube](https://www.youtube.com/@tradingstrategyprotocol)
+- [Follow on Twitter](https://twitter.com/TradingProtocol)
+- [Follow on Telegram](https://t.me/trading_protocol)
+- [Follow on LinkedIn](https://www.linkedin.com/company/trading-strategy/)
