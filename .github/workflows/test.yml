@@ -1,10 +1,11 @@
+# Run ape test on Github CI
 name: Automated test suite
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
 
@@ -19,23 +20,30 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      # TODO: we only need contracts/aave-v3-deploy for tests
-      # but there does not seem to be an option to choose which submodules to checkout
-      # https://github.com/actions/checkout
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-      - name: Install poetry
-        run: pipx install poetry
+      - uses: actions/checkout@v4
       - name: Set up Python 3.12
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-          cache: 'poetry'
-      - name: Install dependencies
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install Ape and dependencies
         run: |
           poetry env use '3.12'
           poetry install --all-extras
+      - name: Install Ape plugins
+        run: |
+          poetry run ape plugins install .
+      - name: Compile smart contract dependency packages
+        run: |
+          poetry run ape pm compile
+      - name: Compile our smart contracts
+        run: |
+          poetry run ape compile
       - name: Run test scripts
         run: |
           poetry run pytest 

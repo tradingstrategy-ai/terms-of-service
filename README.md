@@ -7,6 +7,8 @@ has accepted the latest terms of service.
 
 - Record on-chain that users have accepted some sort of a disclaimer 
 - Enforce users to accept disclaimers when they use with the smart contract
+- User signs an [EIP-191 message](https://eips.ethereum.org/EIPS/eip-191) from their wallet
+- Multisignature wallet and protocol friendly [EIP-1271](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/SignatureChecker.sol) is supported
 
 ## Requirements
 
@@ -71,3 +73,10 @@ poetry shell
 ape test
 ```
 
+## More information
+
+- [Join Discord for any questions](https://tradingstrategy.ai/community).
+- [Watch tutorials on YouTube](https://www.youtube.com/@tradingstrategyprotocol)
+- [Follow on Twitter](https://twitter.com/TradingProtocol)
+- [Follow on Telegram](https://t.me/trading_protocol)
+- [Follow on LinkedIn](https://www.linkedin.com/company/trading-strategy/)

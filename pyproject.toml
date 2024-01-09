@@ -10,6 +10,7 @@ packages = [{include = "terms_of_service"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 eth-ape = "^0.7.3"
+setuptools = "^69.0.3"
 
 
 [tool.poetry.group.dev.dependencies]
