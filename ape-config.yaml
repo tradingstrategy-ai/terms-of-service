@@ -12,3 +12,10 @@ solidity:
 plugins:
   - name: solidity
     version: 0.7.0
+  - name: polygon
+
+geth:
+  polygon:
+    mainnet:
+      uri: https://polygon-rpc.com/
+
