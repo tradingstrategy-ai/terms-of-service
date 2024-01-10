@@ -91,18 +91,59 @@ Then:
 ```shell 
 export DEPLOY_PRIVATE_KEY=
 export JSON_RPC_POLYGON=
-forge create --rpc-url $JSON_RPC_POLYGON --private-key $DEPLOY_PRIVATE_KEY contracts/TermsOfService.sol:TermsOfService
+export POLYGONSCAN_API_KEY=
+forge create \
+  --rpc-url $JSON_RPC_POLYGON \
+  --private-key $DEPLOY_PRIVATE_KEY \
+  --etherscan-api-key $POLYGONSCAN_API_KEY \
+  --verify \
+  src/TermsOfService.sol:TermsOfService
+```
+
+#### PolygonScan verification failures with Forge 
+
+Save the address. Because Polygonscan is a hard mistress and tends to crash, verify manually:
+
+```shell
+export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d.
+scripts/verify-deployment.sh
 ```
 
 ### Initialising
 
-The following placeholder terms of service message is used.
+[The INITIAL_ACCEPTANCE_MESSAGE placeholder terms of service message](./terms_of_service/acceptance_message.py) is used.
 
+
+Get the hash of the message:
+
+```shell
+ipython 
 ```
 
+```python
+from terms_of_service.acceptance_message import INITIAL_ACCEPTANCE_MESSAGE, get_signing_hash
+print(get_signing_hash(INITIAL_ACCEPTANCE_MESSAGE).hex())
 ```
 
+```shell
+export ACCEPTANCE_MESSAGE_HASH=808318f1c18ddfb861cd9755fe5005e3028f816039dc42a1b52e4f5031b645a4
+export TERMS_OF_SERVICE_VERSION=1
+```
 
+Then set the initial version:
+
+```shell
+cast send \
+  --private-key $DEPLOY_PRIVATE_KEY \
+  --rpc-url $JSON_RPC_POLYGON \
+  "updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash)" \ 
+  $TERMS_OF_SERVICE_VERSION \
+  $ACCEPTANCE_MESSAGE_HASH
+```
+
+## Deployment
+
+A test deployment can be found on Polygon []().
 
 ## More information
 
