@@ -1,82 +1,66 @@
-# Terms Of Service Acceptance Manager
+## Foundry
 
-A Solidity smart contract for making sure the smart contract caller
-has accepted the latest terms of service.
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-## Use cases
+Foundry consists of:
 
-- Record on-chain that users have accepted some sort of a disclaimer 
-- Enforce users to accept disclaimers when they use with the smart contract
-- User signs an [EIP-191 message](https://eips.ethereum.org/EIPS/eip-191) from their wallet
-- Multisignature wallet and protocol friendly [EIP-1271](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/SignatureChecker.sol) is supported
+-   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+-   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+-   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+-   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-## Requirements
+## Documentation
 
-- Python 3.10+
+https://book.getfoundry.sh/
 
-## Workflow
+## Usage
 
-### Deploying
-
-Deploy [TermsOfService smart contract](./contracts/TermsOfService.sol) for your chain
-
-- Each deployment has its own smart contract address
-- Each chain needs its own deployment
-- Each TermsOfService tracks the currently active terms of service text
-
-### Updating terms of service
-
-Creating terms of service
-
-- Create a Markdown/plain text terms of service file
-  - Must be dated
-  - Must have a version number counter start from 1, then 2
-  - Record SHA-256 bit hash of the text 
-- Use update script to bump the new terms of service live
-
-### Users to sign the terms of service
-
-- The smart contract has `canProceed` function to check if a 
-  particular address has signed the latest terms of service version
-- The user signs a [template message](./terms_of_service/acceptance_message.py)
-  with their wallet. Note that this message only refers to the actual 
-  terms of service based on its version, hash, date and link,
-- The address must have always signed the latest terms of service,
-  and should be prompted to sign again if this is not the case
-- The terms of service signing payload can be passed part 
-  as another smart contract transaction, and **does not** need
-  to be a separate transaction
-
-On hashes: There are two hashes. One for the actual terms of service
-file (never referred in the smart contracts) and one for the message
-(template-based) that users need to sign with their wallet.
-
-## Getting started
-
-Install framework with Poetry:
-
-```
-poetry install
-```
-
-## Compiling
+### Build
 
 ```shell
-poetry shell
-ape compile
+$ forge build
 ```
 
-## Running tests
+### Test
 
 ```shell
-poetry shell
-ape test
+$ forge test
 ```
 
-## More information
+### Format
 
-- [Join Discord for any questions](https://tradingstrategy.ai/community).
-- [Watch tutorials on YouTube](https://www.youtube.com/@tradingstrategyprotocol)
-- [Follow on Twitter](https://twitter.com/TradingProtocol)
-- [Follow on Telegram](https://t.me/trading_protocol)
-- [Follow on LinkedIn](https://www.linkedin.com/company/trading-strategy/)
+```shell
+$ forge fmt
+```
+
+### Gas Snapshots
+
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
