@@ -11,5 +11,5 @@ forge verify-contract \
     --chain polygon \
     --constructor-args $(cast abi-encode "constructor()") \
      $CONTRACT_ADDRESS \
-     src/VaultUSDCPaymentForwarder.sol:VaultUSDCPaymentForwarder
+     src/TermsOfService.sol:TermsOfService
 

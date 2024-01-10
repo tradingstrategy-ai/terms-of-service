@@ -105,7 +105,7 @@ forge create \
 Save the address. Because Polygonscan is a hard mistress and tends to crash, verify manually:
 
 ```shell
-export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d.
+export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d
 scripts/verify-deployment.sh
 ```
 
@@ -128,6 +128,7 @@ print(get_signing_hash(INITIAL_ACCEPTANCE_MESSAGE).hex())
 ```shell
 export ACCEPTANCE_MESSAGE_HASH=808318f1c18ddfb861cd9755fe5005e3028f816039dc42a1b52e4f5031b645a4
 export TERMS_OF_SERVICE_VERSION=1
+export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d
 ```
 
 Then set the initial version:
@@ -136,14 +137,15 @@ Then set the initial version:
 cast send \
   --private-key $DEPLOY_PRIVATE_KEY \
   --rpc-url $JSON_RPC_POLYGON \
-  "updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash)" \ 
+  $CONTRACT_ADDRESS \
+  "updateTermsOfService(uint16,bytes32)" \
   $TERMS_OF_SERVICE_VERSION \
   $ACCEPTANCE_MESSAGE_HASH
 ```
 
 ## Deployment
 
-A test deployment can be found on Polygon []().
+A test deployment can be found on Polygon [0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d](https://polygonscan.com/address/0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d).
 
 ## More information
 
