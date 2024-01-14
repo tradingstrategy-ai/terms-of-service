@@ -13,8 +13,8 @@ import "@openzeppelin/utils/cryptography/SignatureChecker.sol";
  * Minimal MVP interface
  */
 interface ITermsOfService {
-    function canProceed() external returns (bool accepted);
-    function signTermsOfServiceOwn(bytes32 hash, bytes memory signature, bytes memory metadata) external;
+    function canAddressProceed(address sender) external returns (bool accepted);
+    function signTermsOfServiceBehalf(address signer, bytes32 hash, bytes calldata signature, bytes calldata metadata) external;
 }
 
 /**
@@ -83,8 +83,16 @@ contract TermsOfService is Ownable, ITermsOfService {
      * the latest terms of service.
      */
     function canProceed() public view returns (bool accepted) {
+        return canAddressProceed(msg.sender);
+    }
+
+    /**
+     * Can a user proceed to the next step, or they they need to sign
+     * the latest terms of service.
+     */
+    function canAddressProceed(address sender) public view returns (bool accepted) {
         require(latestAcceptanceMessageHash != bytes32(0), "Terms of service not initialised");
-        return hasAcceptedHash(msg.sender, latestAcceptanceMessageHash);
+        return hasAcceptedHash(sender, latestAcceptanceMessageHash);
     }
 
     /**
@@ -104,7 +112,7 @@ contract TermsOfService is Ownable, ITermsOfService {
      *
      * - OpenZeppelin SignatureChecker implementation: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/SignatureChecker.sol
      */
-    function signTermsOfServiceBehalf(address signer, bytes32 hash, bytes memory signature, bytes memory metadata) public {
+    function signTermsOfServiceBehalf(address signer, bytes32 hash, bytes calldata signature, bytes calldata metadata) public {
         require(hash == latestAcceptanceMessageHash, "Cannot sign older or unknown versions terms of services");
         require(signer.isValidSignatureNow(hash, signature), "Signature is not valid");
         require(acceptances[signer][latestAcceptanceMessageHash] == false, "Already signed");
@@ -112,7 +120,7 @@ contract TermsOfService is Ownable, ITermsOfService {
         emit Signed(signer, latestTermsOfServiceVersion, latestAcceptanceMessageHash, metadata);
     }
 
-    function signTermsOfServiceOwn(bytes32 hash, bytes memory signature, bytes memory metadata) public {
+    function signTermsOfServiceOwn(bytes32 hash, bytes calldata signature, bytes calldata metadata) public {
         signTermsOfServiceBehalf(msg.sender, hash, signature, metadata);
     }
 

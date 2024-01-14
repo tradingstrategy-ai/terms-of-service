@@ -16,6 +16,7 @@ has accepted the latest terms of service.
 ## Requirements
 
 - Python 3.10+
+- Foundry
 
 ## Workflow
 
