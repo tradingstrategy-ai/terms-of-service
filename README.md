@@ -1,7 +1,7 @@
 # Terms Of Service Acceptance Manager
 
 **Note**: This project is still under initial development,
-and not ready yet.
+and not ready yet. It's currently a frankenstein between Foundry and Ape.
 
 A Solidity smart contract for making sure the smart contract caller
 has accepted the latest terms of service.

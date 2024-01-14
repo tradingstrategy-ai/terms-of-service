@@ -8,12 +8,21 @@ import "@openzeppelin/access/Ownable.sol";
 // verification of smart contract signatures
 import "@openzeppelin/utils/cryptography/SignatureChecker.sol";
 
+
+/**
+ * Minimal MVP interface
+ */
+interface ITermsOfService {
+    function canProceed() external returns (bool accepted);
+    function signTermsOfServiceOwn(bytes32 hash, bytes memory signature, bytes memory metadata) external;
+}
+
 /**
  * Terms of service acceptance tracker
  *
  * Manage signatures of users of different versions of terms of service.
  */
-contract TermsOfService is Ownable {
+contract TermsOfService is Ownable, ITermsOfService {
 
     using SignatureChecker for address;
 
