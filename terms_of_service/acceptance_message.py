@@ -6,7 +6,9 @@
 """
 import datetime
 
+from eth_account.datastructures import SignedMessage
 from eth_account.messages import encode_defunct, _hash_eip191_message
+from eth_account.signers.local import LocalAccount
 
 DEFAULT_ACCEPTANCE_MESSAGE_TEMPLATE = """
 I read and agree on terms of service (version {version}) to use
@@ -47,5 +49,18 @@ def get_signing_hash(message: str) -> bytes:
     return hash
 
 
-def get_initial_hash() -> bytes:
-    """"""
+def sign_terms_of_service(
+    user: LocalAccount,
+    signable_message: str,
+) -> tuple[bytes, bytes]:
+    """Sign terms of service for a local dev test account.
+
+    :return:
+        Tuple (message hash, signed message)
+    """
+
+    assert isinstance(user, LocalAccount)
+    message_hash = get_signing_hash(signable_message)
+    signed_message = user.signHash(message_hash)
+    # import ipdb ; ipdb.set_trace()
+    return message_hash, signed_message.signature

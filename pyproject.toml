@@ -12,7 +12,6 @@ python = "^3.10"
 setuptools = "^69.0.3"
 web3 = "*"
 
-
 [tool.poetry.group.dev.dependencies]
 ipdb = "^0.13.13"
 eth-ape = "^0.7.3"
