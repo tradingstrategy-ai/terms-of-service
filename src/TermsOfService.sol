@@ -9,8 +9,6 @@ import "@openzeppelin/access/Ownable.sol";
 import "@openzeppelin/utils/cryptography/SignatureChecker.sol";
 
 
-
-
 /**
  * Minimal MVP interface
  */
@@ -50,7 +48,7 @@ contract TermsOfService is Ownable, ITermsOfService {
     uint16 public latestTermsOfServiceVersion;
 
     // Add a new terms of service version
-    event UpdateTermsOfService(uint16 version, bytes32 acceptanceMessageHash);
+    event UpdateTermsOfService(uint16 version, bytes32 acceptanceMessageHash, string acceptanceMessage);
 
     event Signed(address signer, uint16 version, bytes32 hash, bytes metadata);
 
@@ -71,13 +69,20 @@ contract TermsOfService is Ownable, ITermsOfService {
         return hasAcceptedHash(account, hash);
     }
 
-    function updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash) public onlyOwner {
+    /**
+     * Update to the new terms of service version.
+     *
+     * We do not check whether acceptance message hash matches the message,
+     * as the message string here is just for the event log keeping.
+     *
+     */
+    function updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash, string acceptanceMessage) public onlyOwner {
         require(version == latestTermsOfServiceVersion + 1, "Versions must be updated incrementally");
         require(acceptanceMessageHash != latestAcceptanceMessageHash, "Setting the same terms of service twice");
         latestAcceptanceMessageHash = acceptanceMessageHash;
         latestTermsOfServiceVersion = version;
         versions[version] = acceptanceMessageHash;
-        emit UpdateTermsOfService(version, acceptanceMessageHash);
+        emit UpdateTermsOfService(version, acceptanceMessageHash, acceptanceMessage);
     }
 
     /**
