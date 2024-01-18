@@ -86,6 +86,7 @@ Using Foundry.
 Compile:
 
 ```shell
+foundry up
 forge build
 ```
 
@@ -123,15 +124,22 @@ Get the hash of the message:
 ipython 
 ```
 
+Then type `%cpaste` and copy-paste in:
+
 ```python
 from terms_of_service.acceptance_message import INITIAL_ACCEPTANCE_MESSAGE, get_signing_hash
-print(get_signing_hash(INITIAL_ACCEPTANCE_MESSAGE).hex())
-```
+new_line_escaped_msg = INITIAL_ACCEPTANCE_MESSAGE.replace("\n", "\\n")
+print("Paste to your shell:")
+print("")
+print(f"""export ACCEPTANCE_MESSAGE_HASH={get_signing_hash(INITIAL_ACCEPTANCE_MESSAGE).hex()}""")
+print(f"""export ACCEPTANCE_MESSAGE="{new_line_escaped_msg}" """)
+````
 
 ```shell
-export ACCEPTANCE_MESSAGE_HASH=808318f1c18ddfb861cd9755fe5005e3028f816039dc42a1b52e4f5031b645a4
+export ACCEPTANCE_MESSAGE_HASH=  # Copy from above output
+export ACCEPTANCE_MESSAGE=  # Copy from above output
 export TERMS_OF_SERVICE_VERSION=1
-export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d
+export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d  # Set your deployed contract
 ```
 
 Then set the initial version:
@@ -141,9 +149,38 @@ cast send \
   --private-key $DEPLOY_PRIVATE_KEY \
   --rpc-url $JSON_RPC_POLYGON \
   $CONTRACT_ADDRESS \
-  "updateTermsOfService(uint16,bytes32)" \
-  $TERMS_OF_SERVICE_VERSION \
-  $ACCEPTANCE_MESSAGE_HASH
+  "updateTermsOfService(uint16,bytes32,string)" \
+  "$TERMS_OF_SERVICE_VERSION" \
+  "$ACCEPTANCE_MESSAGE_HASH" \
+  "$ACCEPTANCE_MESSAGE"
+```
+
+You can also run the above command using [scripts/set-terms-of-service.sh](./scripts/set-terms-of-service.sh).
+The script will complain if you have some variables unset.
+
+## Updating terms of service version
+
+With `ipython`:
+
+```python
+from terms_of_service.acceptance_message import INITIAL_ACCEPTANCE_MESSAGE, get_signing_hash
+
+NEW_ACCEPTANCE_MESSAGE="""Update: December 23th, 2023
+
+In our ongoing commitment to adhere to legal regulations, we will restrict IP addresses located in certain jurisdictions from accessing our application’s frontend user interface. These jurisdictions include: United States, United Kingdom, Cuba, Iran, North Korea, Syria and Russia. Thank you for your understanding and ongoing support
+
+Last Modified: December 23rd, 2023"""
+
+new_line_escaped_msg = NEW_ACCEPTANCE_MESSAGE.replace("\n", "\\n")
+print("Paste to your shell:")
+print("")
+print(f"""export ACCEPTANCE_MESSAGE_HASH={get_signing_hash(NEW_ACCEPTANCE_MESSAGE).hex()}""")
+print(f"""export ACCEPTANCE_MESSAGE="{new_line_escaped_msg}" """)
+print(f"""export TERMS_OF_SERVICE_VERSION=2""")
+```
+
+```shell
+scripts/set-terms-of-service.sh
 ```
 
 ## Deployment

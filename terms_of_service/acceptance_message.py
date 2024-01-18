@@ -1,5 +1,8 @@
 """The default terms of service message that is signed.
 
+- The terms of service itself is not signed as it is too big to fit to small input boxes of the wallet.
+  Instead, we sign a message that refers to the terms of service.
+
 - Uses EIP-151
 
 - See `EthAccout.sign_message implementation <https://github.com/ethereum/eth-account/blob/b4883627557839bed906c89b93eec0fbbb017ec5/eth_account/account.py#L535>`__.
@@ -10,13 +13,6 @@ from eth_account.datastructures import SignedMessage
 from eth_account.messages import encode_defunct, _hash_eip191_message
 from eth_account.signers.local import LocalAccount
 
-DEFAULT_ACCEPTANCE_MESSAGE_TEMPLATE = """
-I read and agree on terms of service (version {version}) to use
-smart contract software deployed on a blockchain.
-
-The terms of service text was published {human_date} at {link}.
-The unique identifier hash for this terms of service text was {hash}.
-""".strip()
 
 INITIAL_ACCEPTANCE_MESSAGE = """
 I read and agree on terms of service (version 1) to use
