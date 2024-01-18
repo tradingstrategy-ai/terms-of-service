@@ -74,7 +74,9 @@ ape compile
 
 ```shell
 poetry shell
-ape test
+# TODO: there is a bug in pytest/ape test that it does not find the tests
+# unless you explicitly pass it the tests folder
+ape test tests
 ```
 
 ## Deploying

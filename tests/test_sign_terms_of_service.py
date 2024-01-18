@@ -33,7 +33,7 @@ def test_not_signed(
 ):
     new_version = 1
     new_hash = random.randbytes(32)
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, "", sender=deployer)
 
     assert not tos.hasAcceptedHash(random_user, new_hash)
     assert not tos.hasAcceptedVersion(random_user, 1)
@@ -56,7 +56,7 @@ def test_signed(
     )
     new_hash = get_signing_hash(signing_content)
 
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, signing_content, sender=deployer)
 
     assert not tos.hasAcceptedHash(random_user, new_hash)
     assert not tos.hasAcceptedVersion(random_user, 1)
@@ -94,7 +94,7 @@ def test_sign_twice(
     )
     new_hash = get_signing_hash(signing_content)
 
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, signing_content, sender=deployer)
 
     signature = random_user.sign_message(signing_content).encode_rsv()
 
@@ -120,7 +120,7 @@ def test_sign_no_version(
     )
     new_hash = get_signing_hash(signing_content)
 
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, signing_content, sender=deployer)
 
     signature = random_user.sign_message(signing_content).encode_rsv()
 
@@ -144,7 +144,7 @@ def test_sign_wrong_signature(
     )
     new_hash = get_signing_hash(signing_content)
 
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, signing_content, sender=deployer)
 
     with reverts("Signature is not valid"):
         tos.signTermsOfServiceOwn(new_hash, random.randbytes(32), b"", sender=random_user)

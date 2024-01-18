@@ -24,6 +24,7 @@ interface ITermsOfService {
  */
 contract TermsOfService is Ownable, ITermsOfService {
 
+    // OpenZeppelin lib supporting smart contract based signing as opposite to EOA signing
     using SignatureChecker for address;
 
     // Terms of service acceptances
@@ -37,19 +38,26 @@ contract TermsOfService is Ownable, ITermsOfService {
     //
     // Published terms of services
     //
-    mapping(uint16 version => bytes32 acceptanceMessageHash) public versions;
-
-    bytes32 public latestAcceptanceMessageHash;
-
     //
     // Terms of service versions, starting from 1 and
     // increased with one for the each iteration.
+    //
+    mapping(uint16 version => bytes32 acceptanceMessageHash) public versions;
+
+    //
+    // What is the hash of currently active terms of service version
+    //
+    bytes32 public latestAcceptanceMessageHash;
+
+    //
+    // What is the version numbe of current terms of service version
     //
     uint16 public latestTermsOfServiceVersion;
 
     // Add a new terms of service version
     event UpdateTermsOfService(uint16 version, bytes32 acceptanceMessageHash, string acceptanceMessage);
 
+    // User accepted a specific terms of service version
     event Signed(address signer, uint16 version, bytes32 hash, bytes metadata);
 
     constructor() Ownable() {
