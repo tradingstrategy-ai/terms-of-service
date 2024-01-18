@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.23;
 
 import "@openzeppelin/access/Ownable.sol";
 
 // Support https://eips.ethereum.org/EIPS/eip-1271
 // verification of smart contract signatures
 import "@openzeppelin/utils/cryptography/SignatureChecker.sol";
-
-
 
 
 /**
@@ -26,6 +24,7 @@ interface ITermsOfService {
  */
 contract TermsOfService is Ownable, ITermsOfService {
 
+    // OpenZeppelin lib supporting smart contract based signing as opposite to EOA signing
     using SignatureChecker for address;
 
     // Terms of service acceptances
@@ -39,19 +38,26 @@ contract TermsOfService is Ownable, ITermsOfService {
     //
     // Published terms of services
     //
-    mapping(uint16 version => bytes32 acceptanceMessageHash) public versions;
-
-    bytes32 public latestAcceptanceMessageHash;
-
     //
     // Terms of service versions, starting from 1 and
     // increased with one for the each iteration.
     //
+    mapping(uint16 version => bytes32 acceptanceMessageHash) public versions;
+
+    //
+    // What is the hash of currently active terms of service version
+    //
+    bytes32 public latestAcceptanceMessageHash;
+
+    //
+    // What is the version numbe of current terms of service version
+    //
     uint16 public latestTermsOfServiceVersion;
 
     // Add a new terms of service version
-    event UpdateTermsOfService(uint16 version, bytes32 acceptanceMessageHash);
+    event UpdateTermsOfService(uint16 version, bytes32 acceptanceMessageHash, string acceptanceMessage);
 
+    // User accepted a specific terms of service version
     event Signed(address signer, uint16 version, bytes32 hash, bytes metadata);
 
     constructor() Ownable() {
@@ -71,13 +77,20 @@ contract TermsOfService is Ownable, ITermsOfService {
         return hasAcceptedHash(account, hash);
     }
 
-    function updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash) public onlyOwner {
+    /**
+     * Update to the new terms of service version.
+     *
+     * We do not check whether acceptance message hash matches the message,
+     * as the message string here is just for the event log keeping.
+     *
+     */
+    function updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash, string calldata acceptanceMessage) public onlyOwner {
         require(version == latestTermsOfServiceVersion + 1, "Versions must be updated incrementally");
         require(acceptanceMessageHash != latestAcceptanceMessageHash, "Setting the same terms of service twice");
         latestAcceptanceMessageHash = acceptanceMessageHash;
         latestTermsOfServiceVersion = version;
         versions[version] = acceptanceMessageHash;
-        emit UpdateTermsOfService(version, acceptanceMessageHash);
+        emit UpdateTermsOfService(version, acceptanceMessageHash, acceptanceMessage);
     }
 
     /**

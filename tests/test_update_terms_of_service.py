@@ -32,7 +32,7 @@ def test_start_zero_version(tos: ContractInstance):
 def test_first_terms_of_service(tos: ContractInstance, deployer: TestAccount):
     new_version = 1
     new_hash = random.randbytes(32)
-    tx = tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tx = tos.updateTermsOfService(new_version, new_hash, "", sender=deployer)
     assert tos.latestTermsOfServiceVersion() == 1
     assert tos.latestAcceptanceMessageHash() == new_hash
 
@@ -48,13 +48,13 @@ def test_first_terms_of_service(tos: ContractInstance, deployer: TestAccount):
 def test_second_terms_of_service(tos: ContractInstance, deployer: TestAccount):
     new_version = 1
     new_hash = random.randbytes(32)
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, "", sender=deployer)
     assert tos.latestTermsOfServiceVersion() == 1
     assert tos.latestAcceptanceMessageHash() == new_hash
 
     new_version = 2
     new_hash = random.randbytes(32)
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, "", sender=deployer)
     assert tos.latestTermsOfServiceVersion() == 2
     assert tos.latestAcceptanceMessageHash() == new_hash
 
@@ -64,7 +64,7 @@ def test_wrong_owner(tos: ContractInstance, random_user: TestAccount):
     new_hash = random.randbytes(32)
 
     with pytest.raises(ContractLogicError):
-        tos.updateTermsOfService(new_version, new_hash, sender=random_user)
+        tos.updateTermsOfService(new_version, new_hash, "", sender=random_user)
 
     assert tos.latestTermsOfServiceVersion() == 0
 
@@ -74,7 +74,7 @@ def test_wrong_version(tos: ContractInstance, deployer: TestAccount):
     new_hash = random.randbytes(32)
 
     with pytest.raises(ContractLogicError):
-        tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+        tos.updateTermsOfService(new_version, new_hash, "", sender=deployer)
 
     assert tos.latestTermsOfServiceVersion() == 0
 
@@ -82,11 +82,11 @@ def test_wrong_version(tos: ContractInstance, deployer: TestAccount):
 def test_hash_reuse(tos: ContractInstance, deployer: TestAccount):
     new_version = 1
     new_hash = random.randbytes(32)
-    tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+    tos.updateTermsOfService(new_version, new_hash, "", sender=deployer)
 
     new_version = 2
     with pytest.raises(ContractLogicError):
-        tos.updateTermsOfService(new_version, new_hash, sender=deployer)
+        tos.updateTermsOfService(new_version, new_hash, "", sender=deployer)
 
 
 def test_transfer_ownership(tos: ContractInstance, deployer: TestAccount, random_user: TestAccount):
