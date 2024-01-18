@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.23;
 
 import "@openzeppelin/access/Ownable.sol";
 
@@ -76,7 +76,7 @@ contract TermsOfService is Ownable, ITermsOfService {
      * as the message string here is just for the event log keeping.
      *
      */
-    function updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash, string acceptanceMessage) public onlyOwner {
+    function updateTermsOfService(uint16 version, bytes32 acceptanceMessageHash, string calldata acceptanceMessage) public onlyOwner {
         require(version == latestTermsOfServiceVersion + 1, "Versions must be updated incrementally");
         require(acceptanceMessageHash != latestAcceptanceMessageHash, "Setting the same terms of service twice");
         latestAcceptanceMessageHash = acceptanceMessageHash;
