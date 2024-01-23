@@ -17,12 +17,12 @@ DEFAULT_ACCEPTANCE_MESSAGE_TEMPLATE = """
 I read and agree on terms of service (version {version}) to use
 smart contract software deployed on a blockchain.
 The terms of service text was published {human_date} at {link}.
-The unique identifier hash for this terms of service text was {hash}.
+The unique identifier hash for this terms of service tgext was {hash}.
 """.strip()
 
 INITIAL_ACCEPTANCE_MESSAGE = """
 I read and agree on terms of service (version 1) to use
-smart contract software deployed on a blockchain.
+smart contract software deployed on a blockchain.   
 
 The terms of service text was published 10.1.2024 at https://example.com.
 The unique identifier hash for this terms of service text was 0x0000000000000000000000000000000000000000.
