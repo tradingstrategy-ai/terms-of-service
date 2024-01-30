@@ -139,7 +139,7 @@ print(f"""export ACCEPTANCE_MESSAGE="{new_line_escaped_msg}" """)
 export ACCEPTANCE_MESSAGE_HASH=  # Copy from above output
 export ACCEPTANCE_MESSAGE=  # Copy from above output
 export TERMS_OF_SERVICE_VERSION=1
-export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d  # Set your deployed contract
+export CONTRACT_ADDRESS=0x24BB78E70bE0fC8e93Ce90cc8A586e48428Ff515  # Set your deployed contract
 ```
 
 Then set the initial version:
