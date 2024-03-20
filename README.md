@@ -109,7 +109,7 @@ forge create \
 Save the address. Because Polygonscan is a hard mistress and tends to crash, verify manually:
 
 ```shell
-export CONTRACT_ADDRESS=0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d
+export CONTRACT_ADDRESS=0xbe1418df0bAd87577de1A41385F19c6e77312780
 scripts/verify-deployment.sh
 ```
 
@@ -139,7 +139,7 @@ print(f"""export ACCEPTANCE_MESSAGE="{new_line_escaped_msg}" """)
 export ACCEPTANCE_MESSAGE_HASH=  # Copy from above output
 export ACCEPTANCE_MESSAGE=  # Copy from above output
 export TERMS_OF_SERVICE_VERSION=1
-export CONTRACT_ADDRESS=0x24BB78E70bE0fC8e93Ce90cc8A586e48428Ff515  # Set your deployed contract
+export CONTRACT_ADDRESS=0xbe1418df0bAd87577de1A41385F19c6e77312780  # Set your deployed contract
 ```
 
 Then set the initial version:
@@ -157,6 +157,8 @@ cast send \
 
 You can also run the above command using [scripts/set-terms-of-service.sh](./scripts/set-terms-of-service.sh).
 The script will complain if you have some variables unset.
+
+See here troubleshooting if [cast send fails](https://ethereum.stackexchange.com/questions/161808/foundtry-cast-code-32000-message-replacement-transaction-underpriced-data).
 
 ## Updating terms of service version
 
@@ -185,7 +187,7 @@ scripts/set-terms-of-service.sh
 
 ## Deployment
 
-A test deployment can be found on Polygon [0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d](https://polygonscan.com/address/0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d).
+A deployment can be found on Polygon [0xbe1418df0bAd87577de1A41385F19c6e77312780](https://polygonscan.com/address/0xbe1418df0bAd87577de1A41385F19c6e77312780).
 
 ## More information
 
