@@ -56,16 +56,19 @@ date = os.environ["TOS_DATE"]
 new_line_escaped_msg = TRADING_STRATEGY_ACCEPTANCE_MESSAGE.format(
     version=version,
     date=date,
-).replace("\n", "\\n")
+)
 
 acceptance_message_hash = get_signing_hash(new_line_escaped_msg)
 acceptance_message = f"{new_line_escaped_msg}"
 terms_of_service_version = str(version)
 gas = web3.eth.get_balance(account.address) / 10**18
 
+new_line = "\n"
+escaped_new_line = "\\n"
+
 print(f"Deployer: {account.address}")
 print(f"Contract: {contract.address}")
-print(f"Acceptance message: {acceptance_message}")
+print(f"Acceptance message: {acceptance_message.replace(new_line, escaped_new_line)}")
 print(f"Acceptance hash: {acceptance_message_hash.hex()}")
 print(f"Version: {version}")
 print(f"Date: {date}")
