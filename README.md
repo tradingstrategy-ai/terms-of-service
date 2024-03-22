@@ -181,9 +181,24 @@ print(f"""export ACCEPTANCE_MESSAGE="{new_line_escaped_msg}" """)
 print(f"""export TERMS_OF_SERVICE_VERSION=2""")
 ```
 
+Then run:
+
 ```shell
 scripts/set-terms-of-service.sh
 ```
+
+## Updating terms of service w/ frontend
+
+- Configure environment vars `DEPLOY_PRIVATE_KEY` and `JSON_RPC_POLYGON`, `$CONTRACT_ADDRESS`
+- Get the latest Terms of Service version from the smart contract using PolygonScan:m https://polygonscan.com/address/0xbe1418df0bAd87577de1A41385F19c6e77312780#readContract
+- Bump the version up by one
+- Get the Microsoft Word document from a laywer (lawyers love Microsoft Word)
+- Convert to Markdown using e.g. https://word2md.com/
+- Checkout frontend repo
+- Add the file as .txt file to `lib/assets/tos/` e.g.`lib/assets/tos/2024-03-20.txt`
+- Set environment variables as in [update.py](./scripts/update.py)
+- Run `python scripts/update.py` to change on-chain state and get a new hash
+- Update `lib/assets/tos/tos-map.js`
 
 ## Deployment
 
