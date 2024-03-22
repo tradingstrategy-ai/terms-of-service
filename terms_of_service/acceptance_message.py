@@ -22,11 +22,22 @@ The unique identifier hash for this terms of service tgext was {hash}.
 
 INITIAL_ACCEPTANCE_MESSAGE = """
 I read and agree on terms of service (version 1) to use
-smart contract software deployed on a blockchain.   
+smart contract software deployed on a blockchain.
 
 The terms of service text was published 10.1.2024 at https://example.com.
 The unique identifier hash for this terms of service text was 0x0000000000000000000000000000000000000000.
 """.strip()
+
+
+TRADING_STRATEGY_ACCEPTANCE_MESSAGE = """
+I read and agree on terms of service 
+smart contract software deployed on a blockchain.
+
+The terms of service text was published 10.1.2024 at https://example.com.
+The unique identifier hash for this terms of service text was 0x0000000000000000000000000000000000000000.
+""".strip()
+
+
 
 
 def generate_acceptance_message(
