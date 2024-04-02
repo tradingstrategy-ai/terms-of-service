@@ -200,6 +200,19 @@ scripts/set-terms-of-service.sh
 - Run `python scripts/update.py` to change on-chain state and get a new hash
 - Update `lib/assets/tos/tos-map.js`
 
+Example:
+
+```shell
+# TOS version will be automatically picked from the smart contract
+poetry shell
+export TOS_DATE=2024-03-20
+export CONTRACT_ADDRESS=0xbe1418df0bAd87577de1A41385F19c6e77312780
+export JSON_RPC_POLYGON=
+export DEPLOY_PRIVATE_KEY=
+python scripts/update.py
+
+```
+
 ## Deployment
 
 A deployment can be found on Polygon [0xbe1418df0bAd87577de1A41385F19c6e77312780](https://polygonscan.com/address/0xbe1418df0bAd87577de1A41385F19c6e77312780).

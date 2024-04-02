@@ -30,11 +30,9 @@ The unique identifier hash for this terms of service text was 0x0000000000000000
 
 
 TRADING_STRATEGY_ACCEPTANCE_MESSAGE = """
-I read and agree on Terms of Service to access the
-smart contract software deployed on a blockchain.
+I agree on Terms of Service. I understand smart contract trading is risky and I may lose all of my deposits. 
 
-The Terms of Service version {version}, dated {date}, was published at 
-https://tradingstrategy.ai/tos/{date}.txt
+This Terms of Service version {version}, dated {date}, was published at https://tradingstrategy.ai/tos/{date}.txt
 """.strip()
 
 
