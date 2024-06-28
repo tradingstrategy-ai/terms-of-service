@@ -55,6 +55,11 @@ On hashes: There are two hashes. One for the actual terms of service
 file (never referred in the smart contracts) and one for the message
 (template-based) that users need to sign with their wallet.
 
+## Deployments
+
+- *Polygon*: `0xbe1418df0bAd87577de1A41385F19c6e77312780`
+- *Ethereum*: `0xd63c1bE9D8B56CCcD6fd2Dd9F9c030c6a9916f5F` (latest hash `b24acbfc1295902f1b26e0815e32e6edbdb67c0dacb9b378a556035f7f9b6c52`)
+
 ## Getting started
 
 Install framework with Poetry:
@@ -86,7 +91,7 @@ Using Foundry.
 Compile:
 
 ```shell
-foundry up
+foundryup
 forge build
 ```
 
@@ -109,7 +114,7 @@ forge create \
 Save the address. Because Polygonscan is a hard mistress and tends to crash, verify manually:
 
 ```shell
-export CONTRACT_ADDRESS=0xbe1418df0bAd87577de1A41385F19c6e77312780
+export CONTRACT_ADDRESS=0xbe1418df0bAd87577de1A41385F19c6e77312780  
 scripts/verify-deployment.sh
 ```
 
@@ -200,7 +205,7 @@ scripts/set-terms-of-service.sh
 - Run `python scripts/update.py` to change on-chain state and get a new hash
 - Update `lib/assets/tos/tos-map.js`
 
-Example:
+Example (Polygon):
 
 ```shell
 # TOS version will be automatically picked from the smart contract
@@ -210,8 +215,19 @@ export CONTRACT_ADDRESS=0xbe1418df0bAd87577de1A41385F19c6e77312780
 export JSON_RPC_POLYGON=
 export DEPLOY_PRIVATE_KEY=
 python scripts/update.py
-
 ```
+
+Example (Ethereum):
+
+```shell
+# TOS version will be automatically picked from the smart contract
+poetry shell
+export TOS_DATE=2024-03-20
+export CONTRACT_ADDRESS=0xd63c1bE9D8B56CCcD6fd2Dd9F9c030c6a9916f5F
+export JSON_RPC_POLYGON=
+export DEPLOY_PRIVATE_KEY=
+python scripts/update-ethereum.py
+
 
 ## Deployment
 
