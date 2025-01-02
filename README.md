@@ -173,7 +173,7 @@ With `ipython`:
 ```python
 from terms_of_service.acceptance_message import INITIAL_ACCEPTANCE_MESSAGE, get_signing_hash
 
-NEW_ACCEPTANCE_MESSAGE="""Update: December 23th, 2023
+NEW_ACCEPTANCE_MESSAGE="""Update: December 31th, 2024
 
 In our ongoing commitment to adhere to legal regulations, we will restrict IP addresses located in certain jurisdictions from accessing our application’s frontend user interface. These jurisdictions include: United States, United Kingdom, Cuba, Iran, North Korea, Syria and Russia. Thank you for your understanding and ongoing support
 
@@ -184,7 +184,7 @@ print("Paste to your shell:")
 print("")
 print(f"""export ACCEPTANCE_MESSAGE_HASH={get_signing_hash(NEW_ACCEPTANCE_MESSAGE).hex()}""")
 print(f"""export ACCEPTANCE_MESSAGE="{new_line_escaped_msg}" """)
-print(f"""export TERMS_OF_SERVICE_VERSION=2""")
+print(f"""export TERMS_OF_SERVICE_VERSION=3""")
 ```
 
 Then run:
@@ -223,9 +223,9 @@ Example (Ethereum):
 ```shell
 # TOS version will be automatically picked from the smart contract
 poetry shell
-export TOS_DATE=2024-03-20
+export TOS_DATE=2024-12-19
 export CONTRACT_ADDRESS=0xd63c1bE9D8B56CCcD6fd2Dd9F9c030c6a9916f5F
-export JSON_RPC_POLYGON=
+export JSON_RPC_ETHEREUM=
 export DEPLOY_PRIVATE_KEY=
 python scripts/update-ethereum.py
 

@@ -1,14 +1,13 @@
-"""Update terms of service text on Arbitrum."""
+"""Update terms of service"""
 
 import os
 import json
 import sys
 from pathlib import Path
+from terms_of_service.acceptance_message import TRADING_STRATEGY_ACCEPTANCE_MESSAGE, get_signing_hash
 from web3 import Web3, HTTPProvider
 from web3.middleware import geth_poa_middleware, construct_sign_and_send_raw_middleware
 from eth_account import Account
-
-from terms_of_service.acceptance_message import TRADING_STRATEGY_ACCEPTANCE_MESSAGE, get_signing_hash
 
 
 def get_abi_by_filename(fname: str) -> dict:
@@ -36,26 +35,30 @@ def get_abi_by_filename(fname: str) -> dict:
     return abi["abi"]
 
 
-assert os.environ.get("TERMS_OF_SERVICE_DEPLOY_PRIVATE_KEY"), "Set DEPLOY_PRIVATE_KEY env"
-assert os.environ.get("JSON_RPC_ARBITRUM"), "Set JSON_RPC_ETHEREUM env"
-contract_address = os.environ.get("CONTRACT_ADDRESS", "0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d")
-tos_date = os.environ.get("TOS_DATE", "2024-03-20")
+assert os.environ.get("DEPLOY_PRIVATE_KEY"), "Set DEPLOY_PRIVATE_KEY env"
+assert os.environ.get("JSON_RPC_POLYGON"), "Set JSON_RPC_POLYGON env"
+assert os.environ.get("CONTRACT_ADDRESS"), "Set CONTRACT_ADDRESS env"
+assert os.environ.get("TOS_DATE"), "Set TOS_DATE env"
 
-web3 = Web3(HTTPProvider(os.environ["JSON_RPC_ARBITRUM"]))
-account = Account.from_key(os.environ["TERMS_OF_SERVICE_DEPLOY_PRIVATE_KEY"])
+web3 = Web3(HTTPProvider(os.environ["JSON_RPC_POLYGON"]))
+account = Account.from_key(os.environ["DEPLOY_PRIVATE_KEY"])
 web3.middleware_onion.add(construct_sign_and_send_raw_middleware(account))
 web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 abi = get_abi_by_filename("TermsOfService.json")
 Contract = web3.eth.contract(abi=abi)
-contract = Contract(contract_address)
+contract = Contract(os.environ["CONTRACT_ADDRESS"])
 
-current_version = contract.functions.latestTermsOfServiceVersion().call()
+try:
+    current_version = contract.functions.latestTermsOfServiceVersion().call()
+except Exception as e:
+    raise RuntimeError(f"Could not read contract {contract.address}") from e
 version = current_version + 1
 
+date = os.environ["TOS_DATE"]
 new_line_escaped_msg = TRADING_STRATEGY_ACCEPTANCE_MESSAGE.format(
     version=version,
-    date=tos_date,
+    date=date,
 )
 
 acceptance_message_hash = get_signing_hash(new_line_escaped_msg)
@@ -71,7 +74,7 @@ print(f"Contract: {contract.address}")
 print(f"Acceptance message: {acceptance_message.replace(new_line, escaped_new_line)}")
 print(f"Acceptance hash: {acceptance_message_hash.hex()}")
 print(f"Version: {version}")
-print(f"Date: {tos_date}")
+print(f"Date: {date}")
 print(f"Gas balance: {gas}")
 
 confirm = input("Confirm send tx [y/n] ")
