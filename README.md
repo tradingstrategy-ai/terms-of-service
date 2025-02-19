@@ -1,10 +1,6 @@
 # Terms Of Service Acceptance Manager
 
-**Note**: This project is still under initial development,
-and not ready yet. It's currently a frankenstein between Foundry and Ape.
-
-A Solidity smart contract for making sure the smart contract caller
-has accepted the latest terms of service.
+A Solidity smart contract for making sure the smart contract caller has accepted the latest terms of service on a website. Acceptances are recorded onchain, permanently, for each version of terms.
 
 ## Use cases
 
@@ -12,6 +8,10 @@ has accepted the latest terms of service.
 - Enforce users to accept disclaimers when they use with the smart contract
 - User signs an [EIP-191 message](https://eips.ethereum.org/EIPS/eip-191) from their wallet
 - Multisignature wallet and protocol friendly [EIP-1271](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/cryptography/SignatureChecker.sol) is supported
+
+**Note**: This project is still under initial development,
+and not ready yet. It's currently a frankenstein between Foundry and Ape.
+
 
 ## Requirements
 
