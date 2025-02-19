@@ -60,6 +60,7 @@ file (never referred in the smart contracts) and one for the message
 - *Arbitrum*: `0xDCD7C644a6AA72eb2f86781175b18ADc30Aa4f4d`
 - *Polygon*: `0xbe1418df0bAd87577de1A41385F19c6e77312780`
 - *Ethereum*: `0xd63c1bE9D8B56CCcD6fd2Dd9F9c030c6a9916f5F` (latest hash `b24acbfc1295902f1b26e0815e32e6edbdb67c0dacb9b378a556035f7f9b6c52`)
+- *Base*: [0x7f0a89b113e5d36daf001cd6c50a7f68a6172281](https://basescan.org/address/0x7f0a89b113e5d36daf001cd6c50a7f68a6172281)
 
 ## Getting started
 
@@ -99,6 +100,7 @@ forge build
 Then:
 
 ```shell 
+# See ready script scripts/deploy-base.sh
 export $TERMS_OF_SERVICE_DEPLOY_PRIVATE_KEY=
 export JSON_RPC_ARBITRUM=
 export ARBISCAN_API_KEY=

@@ -35,19 +35,20 @@ def get_abi_by_filename(fname: str) -> dict:
     return abi["abi"]
 
 
+CONTRACT_ADDRESS = Web3.to_checksum_address("0x7f0a89b113e5d36daf001cd6c50a7f68a6172281")
+
 assert os.environ.get("DEPLOY_PRIVATE_KEY"), "Set DEPLOY_PRIVATE_KEY env"
-assert os.environ.get("JSON_RPC_ARBITRUM"), "Set JSON_RPC_ETHEREUM env"
-assert os.environ.get("CONTRACT_ADDRESS"), "Set $CONTRACT_ADDRESS env"
+assert os.environ.get("JSON_RPC_BASE"), "Set JSON_RPC_BASE env"
 assert os.environ.get("TOS_DATE"), "Set $TOS_DATE env"
 
-web3 = Web3(HTTPProvider(os.environ["JSON_RPC_ARBITRUM"]))
+web3 = Web3(HTTPProvider(os.environ["JSON_RPC_BASE"]))
 account = Account.from_key(os.environ["DEPLOY_PRIVATE_KEY"])
 web3.middleware_onion.add(construct_sign_and_send_raw_middleware(account))
 web3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 abi = get_abi_by_filename("TermsOfService.json")
 Contract = web3.eth.contract(abi=abi)
-contract = Contract(os.environ["CONTRACT_ADDRESS"])
+contract = Contract(CONTRACT_ADDRESS)
 
 try:
     current_version = contract.functions.latestTermsOfServiceVersion().call()
