@@ -84,4 +84,3 @@ if confirm != "y":
 tx_hash = contract.functions.updateTermsOfService(version, acceptance_message_hash, acceptance_message).transact({"from": account.address})
 print("Confirming ", tx_hash.hex())
 web3.eth.wait_for_transaction_receipt(tx_hash)
-

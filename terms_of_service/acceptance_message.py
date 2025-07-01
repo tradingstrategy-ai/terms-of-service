@@ -7,6 +7,7 @@
 
 - See `EthAccout.sign_message implementation <https://github.com/ethereum/eth-account/blob/b4883627557839bed906c89b93eec0fbbb017ec5/eth_account/account.py#L535>`__.
 """
+
 import datetime
 
 from eth_account.datastructures import SignedMessage
@@ -36,13 +37,7 @@ This Terms of Service version {version}, dated {date}, was published at https://
 """.strip()
 
 
-
-def generate_acceptance_message(
-        version: int,
-        date: datetime.datetime,
-        link: str,
-        hash: bytes,
-        template=DEFAULT_ACCEPTANCE_MESSAGE_TEMPLATE):
+def generate_acceptance_message(version: int, date: datetime.datetime, link: str, hash: bytes, template=DEFAULT_ACCEPTANCE_MESSAGE_TEMPLATE):
     assert type(version) == int
     assert type(link) == str
     assert type(hash) == bytes

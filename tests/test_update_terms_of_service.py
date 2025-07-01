@@ -1,4 +1,5 @@
 """Tests covering Terms of Service module."""
+
 import random
 
 import pytest
@@ -26,7 +27,7 @@ def tos(networks, project, deployer):
 
 def test_start_zero_version(tos: ContractInstance):
     assert tos.latestTermsOfServiceVersion() == 0
-    assert tos.latestAcceptanceMessageHash() == HexBytes('0x0000000000000000000000000000000000000000000000000000000000000000')
+    assert tos.latestAcceptanceMessageHash() == HexBytes("0x0000000000000000000000000000000000000000000000000000000000000000")
 
 
 def test_first_terms_of_service(tos: ContractInstance, deployer: TestAccount):
@@ -97,6 +98,3 @@ def test_transfer_ownership(tos: ContractInstance, deployer: TestAccount, random
 def test_transfer_ownership_only_owner(tos: ContractInstance, deployer: TestAccount, random_user: TestAccount):
     with pytest.raises(ContractLogicError):
         tos.transferOwnership(random_user, sender=random_user)
-
-
-

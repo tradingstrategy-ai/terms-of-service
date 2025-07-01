@@ -1,4 +1,5 @@
 """Tests covering signing terms of service."""
+
 import datetime
 import random
 
